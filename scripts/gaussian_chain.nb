@@ -1,0 +1,348 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     13446,        338]
+NotebookOptionsPosition[     12299,        310]
+NotebookOutlinePosition[     12732,        327]
+CellTagsIndexPosition[     12689,        324]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[CapitalTheta]", "[", 
+   RowBox[{"\[Omega]_", ",", "\[Tau]_"}], "]"}], ":=", " ", 
+  RowBox[{"Mod", "[", 
+   RowBox[{
+    RowBox[{"\[Omega]", "*", "\[Tau]"}], ",", 
+    RowBox[{"2", "\[Pi]"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.826813740974598*^9, 3.826813796165909*^9}, {
+  3.826813857409552*^9, 3.826813861953658*^9}},
+ CellLabel->"In[10]:=",ExpressionUUID->"d8c7b0a0-dd6f-45ee-af1a-46a7d5c3c7da"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"balmer\[Alpha]", " ", "=", 
+  RowBox[{"SpectralLineData", "[", 
+   RowBox[{
+    RowBox[{"EntityClass", "[", 
+     RowBox[{"\"\<AtomicLine\>\"", ",", 
+      RowBox[{"{", 
+       RowBox[{"\"\<Hydrogen\>\"", ",", "1"}], "}"}]}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Quantity", "[", 
+       RowBox[{"600", ",", "\"\<Nanometers\>\""}], "]"}], ",", 
+      RowBox[{"Quantity", "[", 
+       RowBox[{"700", ",", "\"\<Nanometers\>\""}], "]"}]}], "}"}]}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.826813927910931*^9, 3.82681393489231*^9}, 
+   3.826813971938176*^9, {3.8268140804883537`*^9, 3.826814099857707*^9}},
+ CellLabel->"In[13]:=",ExpressionUUID->"748f26d6-d4f8-4f21-b8f1-0a39fe12e363"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   TemplateBox[{
+     TemplateBox[{"\"H\"", 
+       StyleBox["\":\[ThinSpace]\"", 
+        GrayLevel[0.5], StripOnInput -> False], 
+       TemplateBox[{"\"(\"", "3", 
+         TemplateBox[{
+           StyleBox["\"d\"", Italic, StripOnInput -> False], "1"}, 
+          "Superscript", SyntaxForm -> SuperscriptBox], "\")\""}, 
+        "RowDefault"], 
+       TemplateBox[{
+         TemplateBox[{"\"\"", "\"2\""}, "Superscript", SyntaxForm -> 
+          SuperscriptBox], 
+         SubscriptBox["\"D\"", "\"3/2\""]}, "RowDefault"], 
+       StyleBox["\" \[LongRightArrow] \"", 
+        GrayLevel[0.5], StripOnInput -> False], 
+       TemplateBox[{"\"(\"", "2", 
+         TemplateBox[{
+           StyleBox["\"p\"", Italic, StripOnInput -> False], "1"}, 
+          "Superscript", SyntaxForm -> SuperscriptBox], "\")\""}, 
+        "RowDefault"], 
+       TemplateBox[{
+         TemplateBox[{"\"\"", "\"2\""}, "Superscript", SyntaxForm -> 
+          SuperscriptBox], 
+         SubscriptBox["\"P\"", "\"1/2\""]}, "RowDefault"]}, "RowDefault"], 
+     RowBox[{"Entity", "[", 
+       RowBox[{"\"AtomicLine\"", ",", "\"Hydrogen::1::275845\""}], "]"}], 
+     "\"Entity[\\\"AtomicLine\\\", \\\"Hydrogen::1::275845\\\"]\"", 
+     "\"spectral line\""},
+    "Entity"], ",", 
+   TemplateBox[{
+     TemplateBox[{"\"H\"", 
+       StyleBox["\":\[ThinSpace]\"", 
+        GrayLevel[0.5], StripOnInput -> False], 
+       TemplateBox[{"\"(\"", "3", 
+         TemplateBox[{
+           StyleBox["\"p\"", Italic, StripOnInput -> False], "1"}, 
+          "Superscript", SyntaxForm -> SuperscriptBox], "\")\""}, 
+        "RowDefault"], 
+       TemplateBox[{
+         TemplateBox[{"\"\"", "\"2\""}, "Superscript", SyntaxForm -> 
+          SuperscriptBox], 
+         SubscriptBox["\"P\"", "\"1/2\""]}, "RowDefault"], 
+       StyleBox["\" \[LongRightArrow] \"", 
+        GrayLevel[0.5], StripOnInput -> False], 
+       TemplateBox[{"\"(\"", "2", 
+         TemplateBox[{
+           StyleBox["\"s\"", Italic, StripOnInput -> False], "1"}, 
+          "Superscript", SyntaxForm -> SuperscriptBox], "\")\""}, 
+        "RowDefault"], 
+       TemplateBox[{
+         TemplateBox[{"\"\"", "\"2\""}, "Superscript", SyntaxForm -> 
+          SuperscriptBox], 
+         SubscriptBox["\"S\"", "\"1/2\""]}, "RowDefault"]}, "RowDefault"], 
+     RowBox[{"Entity", "[", 
+       RowBox[{"\"AtomicLine\"", ",", "\"Hydrogen::1::275865\""}], "]"}], 
+     "\"Entity[\\\"AtomicLine\\\", \\\"Hydrogen::1::275865\\\"]\"", 
+     "\"spectral line\""},
+    "Entity"], ",", 
+   TemplateBox[{
+     TemplateBox[{"\"H\"", 
+       StyleBox["\":\[ThinSpace]\"", 
+        GrayLevel[0.5], StripOnInput -> False], 
+       TemplateBox[{"\"(\"", "3", 
+         TemplateBox[{
+           StyleBox["\"p\"", Italic, StripOnInput -> False], "1"}, 
+          "Superscript", SyntaxForm -> SuperscriptBox], "\")\""}, 
+        "RowDefault"], 
+       TemplateBox[{
+         TemplateBox[{"\"\"", "\"2\""}, "Superscript", SyntaxForm -> 
+          SuperscriptBox], 
+         SubscriptBox["\"P\"", "\"3/2\""]}, "RowDefault"], 
+       StyleBox["\" \[LongRightArrow] \"", 
+        GrayLevel[0.5], StripOnInput -> False], 
+       TemplateBox[{"\"(\"", "2", 
+         TemplateBox[{
+           StyleBox["\"s\"", Italic, StripOnInput -> False], "1"}, 
+          "Superscript", SyntaxForm -> SuperscriptBox], "\")\""}, 
+        "RowDefault"], 
+       TemplateBox[{
+         TemplateBox[{"\"\"", "\"2\""}, "Superscript", SyntaxForm -> 
+          SuperscriptBox], 
+         SubscriptBox["\"S\"", "\"1/2\""]}, "RowDefault"]}, "RowDefault"], 
+     RowBox[{"Entity", "[", 
+       RowBox[{"\"AtomicLine\"", ",", "\"Hydrogen::1::275867\""}], "]"}], 
+     "\"Entity[\\\"AtomicLine\\\", \\\"Hydrogen::1::275867\\\"]\"", 
+     "\"spectral line\""},
+    "Entity"], ",", 
+   TemplateBox[{
+     TemplateBox[{"\"H\"", 
+       StyleBox["\":\[ThinSpace]\"", 
+        GrayLevel[0.5], StripOnInput -> False], 
+       TemplateBox[{"\"(\"", "3", 
+         TemplateBox[{
+           StyleBox["\"d\"", Italic, StripOnInput -> False], "1"}, 
+          "Superscript", SyntaxForm -> SuperscriptBox], "\")\""}, 
+        "RowDefault"], 
+       TemplateBox[{
+         TemplateBox[{"\"\"", "\"2\""}, "Superscript", SyntaxForm -> 
+          SuperscriptBox], 
+         SubscriptBox["\"D\"", "\"5/2\""]}, "RowDefault"], 
+       StyleBox["\" \[LongRightArrow] \"", 
+        GrayLevel[0.5], StripOnInput -> False], 
+       TemplateBox[{"\"(\"", "2", 
+         TemplateBox[{
+           StyleBox["\"p\"", Italic, StripOnInput -> False], "1"}, 
+          "Superscript", SyntaxForm -> SuperscriptBox], "\")\""}, 
+        "RowDefault"], 
+       TemplateBox[{
+         TemplateBox[{"\"\"", "\"2\""}, "Superscript", SyntaxForm -> 
+          SuperscriptBox], 
+         SubscriptBox["\"P\"", "\"3/2\""]}, "RowDefault"]}, "RowDefault"], 
+     RowBox[{"Entity", "[", 
+       RowBox[{"\"AtomicLine\"", ",", "\"Hydrogen::1::275904\""}], "]"}], 
+     "\"Entity[\\\"AtomicLine\\\", \\\"Hydrogen::1::275904\\\"]\"", 
+     "\"spectral line\""},
+    "Entity"], ",", 
+   TemplateBox[{
+     TemplateBox[{"\"H\"", 
+       StyleBox["\":\[ThinSpace]\"", 
+        GrayLevel[0.5], StripOnInput -> False], 
+       TemplateBox[{
+         TemplateBox[{"97492.304`", 
+           RowBox[{"\"/\"", "\[InvisibleSpace]", "\"cm\""}], 
+           "reciprocal centimeters", 
+           FractionBox["1", "\"Centimeters\""]}, "Quantity", SyntaxForm -> 
+          Mod]}, "RowDefault"], 
+       StyleBox["\" \[LongRightArrow] \"", 
+        GrayLevel[0.5], StripOnInput -> False], 
+       TemplateBox[{
+         TemplateBox[{"82259.158`", 
+           RowBox[{"\"/\"", "\[InvisibleSpace]", "\"cm\""}], 
+           "reciprocal centimeters", 
+           FractionBox["1", "\"Centimeters\""]}, "Quantity", SyntaxForm -> 
+          Mod]}, "RowDefault"]}, "RowDefault"], 
+     RowBox[{"Entity", "[", 
+       RowBox[{"\"AtomicLine\"", ",", "\"Hydrogen::1::275979\""}], "]"}], 
+     "\"Entity[\\\"AtomicLine\\\", \\\"Hydrogen::1::275979\\\"]\"", 
+     "\"spectral line\""},
+    "Entity"]}], "}"}]], "Output",
+ CellChangeTimes->{{3.8268140905531607`*^9, 3.826814101281577*^9}},
+ CellLabel->"Out[13]=",ExpressionUUID->"68901224-1920-432b-be19-8a8d2a1881d0"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+    "Use", " ", "the", " ", "empirical", " ", "measurement", " ", "of", " ", 
+     "the", " ", "Balmer"}], "-", 
+    RowBox[{"\[Alpha]", " ", "line"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"\[Nu]0", " ", "=", " ", 
+   RowBox[{"SpectralLineData", "[", 
+    RowBox[{
+     RowBox[{"balmer\[Alpha]", "[", 
+      RowBox[{"[", 
+       RowBox[{"-", "1"}], "]"}], "]"}], ",", "\"\<Frequency\>\""}], 
+    "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.826814124198605*^9, 3.826814141415332*^9}, {
+  3.826814179329295*^9, 3.826814206424161*^9}, {3.826814555411681*^9, 
+  3.826814579757658*^9}},
+ CellLabel->"In[16]:=",ExpressionUUID->"ed8f1abd-21fc-4e8a-b73e-56b6c477fecb"],
+
+Cell[BoxData[
+ TemplateBox[{"456.8064161736091`", "\"THz\"", "terahertz", "\"Terahertz\""},
+  "Quantity"]], "Output",
+ CellChangeTimes->{3.826814128729394*^9, 3.8268142074318657`*^9, 
+  3.826814583518297*^9},
+ CellLabel->"Out[16]=",ExpressionUUID->"53a90936-b3b3-4939-8a1e-b2fbed2040b7"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Use", " ", "the", " ", "Doppler", " ", "broadened", " ", "width", " ", 
+    "to", " ", "get", " ", "the", " ", "coherence", " ", "time"}], " ", 
+   "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"massHc2eV", " ", "=", " ", "\[IndentingNewLine]", 
+     RowBox[{"QuantityMagnitude", "[", "\[IndentingNewLine]", 
+      RowBox[{"UnitConvert", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"ElementData", "[", 
+          RowBox[{"\"\<Hydrogen\>\"", ",", "\"\<AtomicWeight\>\""}], "]"}], 
+         "*", 
+         RowBox[{
+          TemplateBox[{
+            InterpretationBox["\[InvisibleSpace]", 1], 
+            StyleBox["\"c\"", Italic, StripOnInput -> False], 
+            "speed of light", "\"SpeedOfLight\""},
+           "Quantity"], "^", "2"}]}], ",", "\"\<eV\>\""}], "]"}], "]"}]}], 
+    ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"kbTev", "[", "T_", "]"}], " ", ":=", " ", 
+    RowBox[{"QuantityMagnitude", "[", "\[IndentingNewLine]", 
+     RowBox[{"UnitConvert", "[", 
+      RowBox[{
+       RowBox[{
+        TemplateBox[{
+          InterpretationBox["\[InvisibleSpace]", 1], 
+          StyleBox["\"k\"", Italic, StripOnInput -> False], 
+          "Boltzmann constants", "\"BoltzmannConstant\""},
+         "Quantity"], "*", 
+        RowBox[{"Quantity", "[", 
+         RowBox[{"T", ",", "\"\<Kelvins\>\""}], "]"}]}], ",", "\"\<eV\>\""}], 
+      "]"}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"\[Gamma]D", "[", 
+     RowBox[{"\[Omega]0_", ",", "T_"}], "]"}], ":=", " ", 
+    RowBox[{"\[Omega]0", "*", 
+     RowBox[{"Sqrt", "[", 
+      RowBox[{"2", "*", 
+       RowBox[{"Log", "[", "2", "]"}], "*", 
+       RowBox[{
+        RowBox[{"kbTev", "[", "T", "]"}], "/", "massHc2eV"}]}], 
+      "]"}]}]}]}]}]], "Input",
+ CellChangeTimes->{{3.826814549282125*^9, 3.8268145516741457`*^9}, {
+  3.826814593763068*^9, 3.826814610042597*^9}, {3.8268149434182673`*^9, 
+  3.826815017122004*^9}, {3.826815115999473*^9, 3.82681514916271*^9}, {
+  3.826815182463629*^9, 3.826815410621914*^9}, {3.826815456039781*^9, 
+  3.826815727258403*^9}, {3.826815772766008*^9, 3.826815789640625*^9}, {
+  3.826815876218889*^9, 3.826815927058051*^9}, {3.826816022812703*^9, 
+  3.826816029364192*^9}},
+ CellLabel->"In[47]:=",ExpressionUUID->"fef51140-2e42-457d-b763-8b058c9cc9f6"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\[Tau]D", " ", "=", " ", 
+  RowBox[{"UnitConvert", "[", 
+   RowBox[{
+    RowBox[{"1", "/", 
+     RowBox[{"\[Gamma]D", "[", 
+      RowBox[{"\[Nu]0", ",", "293"}], "]"}]}], ",", "\"\<Nanoseconds\>\""}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.8268157989490843`*^9, 3.82681584923326*^9}, {
+  3.826815949518841*^9, 3.826815972970881*^9}},
+ CellLabel->"In[50]:=",ExpressionUUID->"5b0f5204-aa1d-4f3c-96af-af4ea70551d9"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "0.3585420874071538`", "\"ns\"", "nanoseconds", "\"Nanoseconds\""},
+  "Quantity"]], "Output",
+ CellChangeTimes->{
+  3.826815849911298*^9, {3.826815908102809*^9, 3.826815973541358*^9}, 
+   3.826816034136451*^9},
+ CellLabel->"Out[50]=",ExpressionUUID->"e1232201-3a22-4cde-9876-4f17e2dbce46"]
+}, Open  ]]
+},
+WindowSize->{516, 681},
+WindowMargins->{{20, Automatic}, {Automatic, 44}},
+TaggingRules->{"TryRealOnly" -> False},
+FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (June 19, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"6012c526-185c-4e68-913a-495f865fba15"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 444, 10, 30, "Input",ExpressionUUID->"d8c7b0a0-dd6f-45ee-af1a-46a7d5c3c7da"],
+Cell[CellGroupData[{
+Cell[1027, 34, 732, 17, 94, "Input",ExpressionUUID->"748f26d6-d4f8-4f21-b8f1-0a39fe12e363"],
+Cell[1762, 53, 6212, 143, 116, "Output",ExpressionUUID->"68901224-1920-432b-be19-8a8d2a1881d0"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8011, 201, 742, 18, 73, "Input",ExpressionUUID->"ed8f1abd-21fc-4e8a-b73e-56b6c477fecb"],
+Cell[8756, 221, 287, 5, 36, "Output",ExpressionUUID->"53a90936-b3b3-4939-8a1e-b2fbed2040b7"]
+}, Open  ]],
+Cell[9058, 229, 2435, 55, 310, "Input",ExpressionUUID->"fef51140-2e42-457d-b763-8b058c9cc9f6"],
+Cell[CellGroupData[{
+Cell[11518, 288, 442, 10, 30, "Input",ExpressionUUID->"5b0f5204-aa1d-4f3c-96af-af4ea70551d9"],
+Cell[11963, 300, 320, 7, 59, "Output",ExpressionUUID->"e1232201-3a22-4cde-9876-4f17e2dbce46"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+
