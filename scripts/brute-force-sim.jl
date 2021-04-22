@@ -133,9 +133,6 @@ if makePlots && classicalPlots
 	"""
 end
 
-# ╔═╡ b2def348-d4c0-4461-bee6-0373673a8fd8
-md"**Download data for classical field and correlation plots:**"
-
 # ╔═╡ 1e48204e-23d8-4581-a160-7ba84b83b8d8
 if makePlots && classicalAvgPlots
 	md"""
@@ -729,7 +726,6 @@ md"""
 # ╟─e2fab25a-ccde-44e8-a3bf-e402fc32d2ba
 # ╟─57da1ea1-5a5d-49d1-88f2-2624a14f8dff
 # ╟─9e013576-7682-4d6c-8caa-e3f2c1034f73
-# ╟─b2def348-d4c0-4461-bee6-0373673a8fd8
 # ╟─b5342349-5b28-4918-bedb-effa46df10c3
 # ╟─1e48204e-23d8-4581-a160-7ba84b83b8d8
 # ╟─0e50e055-6c57-40d9-96ca-d8c795213999
