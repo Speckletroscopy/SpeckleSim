@@ -1,0 +1,27 @@
+digraph G{
+    
+    // *** User input ***
+    // frequencies
+    f0 [label="Central Frequency"];
+    Delta [label="Frequency shifts"];
+    fM [label="Emission line frequencies"];
+    f0->fM;
+    Delta->fM;
+
+    // Doppler broadenening
+    sigDopp [label="Doppler broadening"];
+    temp [label="Temperature"];
+    temp->sigDopp;
+
+    // 
+    emag [label="E-field magnitudes"];
+    rng [label="Random number generator"];
+    
+    // make efield parameter object
+    ep [label="struct:eFieldParams",shape=rectangle];
+    fM->ep;
+    sigDopp->ep;
+    emag->ep;
+    rng->ep;
+
+}
