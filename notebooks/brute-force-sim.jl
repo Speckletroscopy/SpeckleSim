@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.14.3
+# v0.19.12
 
 using Markdown
 using InteractiveUtils
@@ -7,8 +7,9 @@ using InteractiveUtils
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
     quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
-        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : missing
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
     end
 end
@@ -37,6 +38,9 @@ Pkg.add("PlutoUI")
 # ╔═╡ b708f1d2-e8dd-40ee-92fd-cb4ae02a6a9a
 Pkg.add("StatsBase")
 
+# ╔═╡ 04813cc3-3fd3-451c-b225-420c861108e3
+Pkg.add("FFTW")
+
 # ╔═╡ 34a840a1-7050-4719-a81e-c4545551ec7d
 using Random, Distributions, StatsBase
 
@@ -57,6 +61,9 @@ using DataFrames
 
 # ╔═╡ 2f28edec-8461-4eda-a95f-05f4db5b3a81
 using CSV
+
+# ╔═╡ 62533405-5797-4e79-a666-01752b7d5876
+using FFTW
 
 # ╔═╡ 0a435f6c-9f0a-11eb-114f-fb8c733dafbb
 md"# Brute Force Simulation"
@@ -170,7 +177,7 @@ md"""
 # these parameters are needed for all simulations
 begin
 	# Balmer-α lines specified here
-	ωM = 2*π*[456811.0, 456812.0]
+	ωM = 2*π*[456811.0, 456821.0, 456836.0]
 	# magnitude of each line
 	mag = convert(Vector{ComplexF64},ones(length(ωM)))
 	# calculate line differences
@@ -183,11 +190,21 @@ begin
 	τ = times[1:window];
 end;
 
+# ╔═╡ eb5df44a-34f3-40f6-b70c-bab5729f3953
+begin
+	ΔΔ = round.(sort(map(x->abs(x[2]-x[1])/(2*π),subsets(ωM,2))),digits=2)
+	ΔΔstr = map(ΔΔ) do dd
+		ddstr = string(dd,", ")
+	end
+	ΔΔstr = string(ΔΔstr...)[begin:end-2]
+
+end;
+
 # ╔═╡ 7ac53f6b-15ee-440d-acae-005dc3acce51
 md"""
 f0 (GHz) = $(ωM[1]/(2*π))
 
-Δf (GHz) = $(round((ωM[2]-ωM[1])/(2*π),digits=2))
+Δf (GHz) = $ΔΔstr
 
 σ (GHz) = $(round(sqrt(9.178e-14*temp)*ωM[1]/(2*π),digits=2))
 """
@@ -218,25 +235,29 @@ if makePlots
 end
 
 # ╔═╡ 21e16aae-1b50-4f31-936a-17525352afbe
+# our calculated g2τ
 if makePlots
-	# our calculated g2τ
-	g2τCalc = 1
-	Emag2 = real.(mag .* conj(mag))
-	Emag4 = Emag2 .* Emag2
-	sumEmag2 = sum(Emag2)
-	sumEmag4 = sum(Emag4)
-	term2 = sumEmag4/(bigN*sumEmag2^2)
-	g2τCalc -= term2
-	
-	term3 = sum(Emag2 .* exp.(-im*ΔM .* transpose(τ)),dims=1)/sumEmag2
-	term3 = real.(term3 .* conj(term3))
-	
-	kbOverMhC2 = 9.178e-14;
-	σ = sqrt(kbOverMhC2*temp)*ωM[1]
-	stauAvg = transpose(bigN .+ bigN*(bigN-1)*exp.(-σ^2*τ .^2))
-	term3 = term3 .* stauAvg/bigN^2
-	
-	g2τCalc =  g2τCalc .+ term3
+	g2τCalc = let
+		g2τ = 1
+		Emag2 = real.(mag .* conj(mag))
+		Emag4 = Emag2 .* Emag2
+		sumEmag2 = sum(Emag2)
+		sumEmag4 = sum(Emag4)
+		term2 = sumEmag4/(bigN*sumEmag2^2)
+		g2τ -= term2
+		
+		term3 = sum(Emag2 .* exp.(-im*ΔM .* transpose(τ)),dims=1)/sumEmag2
+		term3 = real.(term3 .* conj(term3))
+		
+		kbOverMhC2 = 9.178e-14;
+		σ = sqrt(kbOverMhC2*temp)*ωM[1]
+		stauAvg = transpose(bigN .+ bigN*(bigN-1)*exp.(-σ^2*τ .^2))
+		term3 = term3 .* stauAvg/bigN^2
+		
+		g2τ .+ term3
+	end
+
+	# stauVar = 
 end;
 
 # ╔═╡ 173ca217-29e6-4c5f-8995-0bd5b62c32dd
@@ -245,6 +266,40 @@ md"""
 
 $g^{(2)}(\tau) =1-\frac{1}{N}\frac{\sum_{m=1}^M|\mathcal{E}|_m^4}{\left(\sum_{m=1}^M|\mathcal{E}_m|^2\right)^2}+\left|\frac{\sum_{m=1}^M|\mathcal{E}_m|^2e^{-i\Delta_m\tau}}{\sum_{m=1}^M|\mathcal{E}|_m^2}\right|^2\frac{\langle S(\tau)\rangle_\omega}{N^2}$
 """
+
+# ╔═╡ 5430c12e-a902-4ff8-a47c-b26771773825
+"""
+	function between(x,x0,x1)
+
+Returns `true` if \$x∈[x0,x1)\$ with \$0 ≤ x0\$, `true` if \$x∈(x0,x1]\$ with \$x0 < 0\$, and `false` otherwise
+"""
+function between(x,x0,x1)
+	if x0 > x1
+		hold = x0
+		x0 = x1
+		x1 = hold
+	end
+
+	if x0 < 0 # x∈(x0,x1]
+		if x ≤ x0 && x < x1
+			return false
+		end
+		if x > x0 && x > x1
+			return false
+		end
+		return true
+	end
+
+	# x∈[x0,x1)
+	if x < x0 && x < x1
+		return false
+	end
+	if x > x0 && x ≥ x1
+		return false
+	end
+	
+	return true
+end
 
 # ╔═╡ 689bc5a6-2469-41eb-99ce-c300dd73874e
 md"""
@@ -346,6 +401,7 @@ function ωnDoppler(ω0::Real,N::Integer,temp::Real,seed::Integer = -1)
 	σ = sqrt(kbOverMhC2*temp)*ω0
 	d = Normal(ω0,σ)
 	return rand(rng,d,N)
+	# return ω0*ones(N)
 end
 
 # ╔═╡ b237ca1e-1719-420c-820d-67b8e18c7a57
@@ -445,39 +501,45 @@ end;
 # ╔═╡ 9e013576-7682-4d6c-8caa-e3f2c1034f73
 if makePlots && classicalPlots
 	if !(classicalAvgPlots || countsPlot || corrPlot)
+
+		# electric field magnitude
 		e1fieldPlot = plot(times[1+windowPos:windowSize+windowPos],real.(e1fieldt)[1+windowPos:windowSize+windowPos],label=false,title="E(t)")
 		xlabel!(e1fieldPlot,"t (ns)")
 
-		eCorr1Plot = plot(τ[1+windowPos:windowSize+windowPos],g1τ1[1+windowPos:windowSize+windowPos],label=false,title="g1(τ)")
-		xlabel!(eCorr1Plot,"τ (ns)")
+		# first order correlation
+		eCorr1Plot = plot(τ[1+windowPos:windowSize+windowPos],g1τ1[1+windowPos:windowSize+windowPos],label=false,title="g1(tau)")
+		xlabel!(eCorr1Plot,"tau (ns)")
 
+		# intensity
 		intensity1tPlot = plot(times[1+windowPos:windowSize+windowPos],intensity1t[1+windowPos:windowSize+windowPos],label=false,color=2,title="I(t)")
 		xlabel!(intensity1tPlot,"t (ns)")
 
-		iCorr1Plot = plot(τ[1+windowPos:windowSize+windowPos],g2τ1[1+windowPos:windowSize+windowPos],label="data",color=2,title="g2(τ)")
-		plot!(iCorr1Plot,τ[1+windowPos:windowSize+windowPos],transpose(g2τCalc)[1+windowPos:windowSize+windowPos],label="calc")
-		xlabel!(iCorr1Plot,"τ (ns)")
+		# second order correlation 
+		iCorr1Plot = plot(τ[1+windowPos:windowSize+windowPos],g2τ1[1+windowPos:windowSize+windowPos],label="data",color=2,title="g2(tau)")
+		plot!(iCorr1Plot,τ[1+windowPos:windowSize+windowPos],transpose(g2τCalc)[1+windowPos:windowSize+windowPos],color=3,label="calc")
+		xlabel!(iCorr1Plot,"tau (ns)")
 
 		plot(e1fieldPlot,intensity1tPlot,eCorr1Plot,iCorr1Plot,layout=(2,2),size=(800,800))
 	else
 		e1fieldPlot = plot(times[1+windowPos:windowSize+windowPos],real.(e1fieldtM)[1+windowPos:windowSize+windowPos],label=false,title="E(t)")
 		xlabel!(e1fieldPlot,"t (ns)")
 
-		eCorr1Plot = plot(τ[1+windowPos:windowSize+windowPos],g1τ1M[1+windowPos:windowSize+windowPos],label=false,title="g1(τ)")
-		xlabel!(eCorr1Plot,"τ (ns)")
+		eCorr1Plot = plot(τ[1+windowPos:windowSize+windowPos],g1τ1M[1+windowPos:windowSize+windowPos],label=false,title="g1(tau)")
+		xlabel!(eCorr1Plot,"tau (ns)")
 
 		intensity1tPlot = plot(times[1+windowPos:windowSize+windowPos],intensity1tM[1+windowPos:windowSize+windowPos],label=false,color=2,title="I(t)")
 		xlabel!(intensity1tPlot,"t (ns)")
 
-		iCorr1Plot = plot(τ[1+windowPos:windowSize+windowPos],g2τ1M[1+windowPos:windowSize+windowPos],label="data",color=2,title="g2(τ)")
+		iCorr1Plot = plot(τ[1+windowPos:windowSize+windowPos],g2τ1M[1+windowPos:windowSize+windowPos],label="data",color=2,title="g2(tau)")
 		plot!(iCorr1Plot,τ[1+windowPos:windowSize+windowPos],transpose(g2τCalc)[1+windowPos:windowSize+windowPos],label="calc",color=3)
-		xlabel!(iCorr1Plot,"τ (ns)")
+		xlabel!(iCorr1Plot,"tau (ns)")
 
 		plot(e1fieldPlot,intensity1tPlot,eCorr1Plot,iCorr1Plot,layout=(2,2),size=(800,800))
 	end
 end
 
 # ╔═╡ b5342349-5b28-4918-bedb-effa46df10c3
+# download above plots as CSV files
 if makePlots && classicalPlots
 	if !(classicalAvgPlots || countsPlot || corrPlot)
 		classicalFieldDf = DataFrame(
@@ -682,6 +744,72 @@ if makePlots && classicalAvgPlots
 
 end
 
+# ╔═╡ dc33b908-7efe-4bf0-945e-851388e2f5fe
+if makePlots && classicalAvgPlots
+
+	# τ
+	g2fft = abs.(FFTW.fft(g2τAvg))
+	ftfreq = FFTW.fftfreq(length(τ),1/τ[2])
+
+	ftfreq_pos_bool = ftfreq .> 0
+
+	ftfreq_pos = ftfreq[ftfreq_pos_bool]
+	g2fft_pos  = g2fft[ftfreq_pos_bool]
+
+	fcut=40
+	g2tauftplot = plot(ftfreq_pos[begin:fcut],g2fft_pos[begin:fcut])
+	vline!(g2tauftplot,ΔM/(2*π),color=:red)
+		
+end
+
+# ╔═╡ 89c1cf51-606b-4ae5-9356-096e9fa07b88
+if makePlots
+	# ftfreq = FFTW.fftfreq(length(τ),1/τ[2])
+
+	# ftfreq_pos_bool = ftfreq .> 0
+	# ftfreq_pos = ftfreq[ftfreq_pos_bool]
+	twopi = 2*π
+
+	bB = 1/(bigN*sumEmag2)^2
+	aA = bigN*sumEmag4*bB
+
+	Δmm = map(x->x .- ΔM,ΔM)
+	Δmm = vcat(Δmm...)/twopi
+	mag2m = abs.(mag)
+	mag2m = mag2m.^2
+	mag4mm = map(x->x .* mag2m,mag2m)
+	mag4mm = vcat(mag4mm...)
+
+	g2tauft = map(x-> between(x,0,ftfreq_pos[2])*(1- aA ),ftfreq_pos)
+
+	g2tauft_term2 = map(ftfreq_pos) do ff
+		deltaTerm = map(x->between(ff,x,x+ftfreq_pos[2])*1,Δmm)
+		term2 = dot.(mag4mm,deltaTerm)
+		sum(term2)
+	end
+	g2tauft_term2 *= bigN*bB
+
+	g2tauft += g2tauft_term2
+
+	g2tauft_term3 = map(ftfreq_pos) do ff
+		expmm = (ff.+Δmm)
+		expmm = expmm.^2
+		expmm = -1*expmm/(4*σ^2)
+		expmm = exp.(expmm)
+		eeexpmm = mag4mm .* expmm
+		expmmsum = sum(eeexpmm)
+	end
+	g2tauft_term3 *= bigN*(bigN-1)*bB/(2*σ*sqrt(π))
+
+	g2tauft += g2tauft_term3
+	
+end
+
+# ╔═╡ 0f5bb62b-35d6-4ef4-8de7-b1b84f99f52b
+if makePlots && classicalAvgPlots
+	plot(ftfreq_pos,g2tauft)
+end
+
 # ╔═╡ c023ca90-8bc8-4183-b0b9-9b1a8bfb4b59
 if makePlots && classicalAvgPlots
 	classicalFieldAvgDf = DataFrame(
@@ -707,6 +835,9 @@ if makePlots && classicalAvgPlots
 	"""
 end
 
+# ╔═╡ 6002de50-f450-4aa5-b324-0bd4a798427d
+exp((2*π*2)^2)
+
 # ╔═╡ 57b0a316-782e-4f85-8a77-8743abc601f1
 md"""
 ## Load Prerequisites
@@ -716,6 +847,7 @@ md"""
 # ╟─0a435f6c-9f0a-11eb-114f-fb8c733dafbb
 # ╟─5c181bf0-f92e-40ac-9193-62c48927f60f
 # ╟─0fe833e8-a359-41e2-ba4a-b8313a222182
+# ╟─eb5df44a-34f3-40f6-b70c-bab5729f3953
 # ╟─7ac53f6b-15ee-440d-acae-005dc3acce51
 # ╟─c0e353c3-53e7-4419-b8cf-878f6fbc761d
 # ╟─402b4a2a-d22f-4ee7-ae3d-ca5fe7fda110
@@ -729,18 +861,22 @@ md"""
 # ╟─b5342349-5b28-4918-bedb-effa46df10c3
 # ╟─1e48204e-23d8-4581-a160-7ba84b83b8d8
 # ╟─0e50e055-6c57-40d9-96ca-d8c795213999
+# ╟─dc33b908-7efe-4bf0-945e-851388e2f5fe
+# ╟─0f5bb62b-35d6-4ef4-8de7-b1b84f99f52b
 # ╟─c023ca90-8bc8-4183-b0b9-9b1a8bfb4b59
 # ╟─0f36d9b7-6ba6-402d-9601-53b16e952110
-# ╠═92d93e89-1d36-4bf0-b3f8-d4370e08857b
-# ╠═9561be7c-ab38-493a-8b33-cd7fb7aec495
-# ╠═c54073d5-b58a-46ed-b086-d6347c1dbcda
-# ╠═25b20ebd-3fc1-4326-9848-1adf5afb768d
+# ╟─92d93e89-1d36-4bf0-b3f8-d4370e08857b
+# ╟─9561be7c-ab38-493a-8b33-cd7fb7aec495
+# ╟─c54073d5-b58a-46ed-b086-d6347c1dbcda
+# ╟─25b20ebd-3fc1-4326-9848-1adf5afb768d
 # ╟─ac647fa5-3294-4328-9b9f-fae54ef54174
 # ╟─13e70af4-146d-43e7-9fd6-ec8f901185d4
 # ╟─807e056a-3c89-46f9-8dc2-5dde04023ce2
 # ╠═f2e2b9fd-9d21-410c-89d8-2286b163bb2a
 # ╠═21e16aae-1b50-4f31-936a-17525352afbe
-# ╟─173ca217-29e6-4c5f-8995-0bd5b62c32dd
+# ╠═173ca217-29e6-4c5f-8995-0bd5b62c32dd
+# ╠═89c1cf51-606b-4ae5-9356-096e9fa07b88
+# ╟─5430c12e-a902-4ff8-a47c-b26771773825
 # ╠═18f7bc41-751f-4283-8a90-af3ad217b58b
 # ╠═39e8d2c6-c8de-4e0a-b531-60dbaadd6aa1
 # ╠═099f95dc-1dbc-48f6-ab3f-0920e86f0c0a
@@ -761,6 +897,7 @@ md"""
 # ╠═31b92f9f-6be0-48cb-9a7e-bfc5edb79bd2
 # ╠═3edfcf46-9f6d-4ff0-8179-f9a7ddb1897f
 # ╠═2328359b-8f27-4a18-8d63-0538dbdfcdff
+# ╠═6002de50-f450-4aa5-b324-0bd4a798427d
 # ╟─57b0a316-782e-4f85-8a77-8743abc601f1
 # ╠═f1c9d31f-c565-4e96-8801-22352b014397
 # ╠═f6daaa32-fe10-4a20-b30e-ba31b63c6b90
@@ -770,6 +907,7 @@ md"""
 # ╠═55405eea-1c12-4060-81f5-cbcc082a992c
 # ╠═7e392b1a-31a8-4364-ac93-742221501f1c
 # ╠═b708f1d2-e8dd-40ee-92fd-cb4ae02a6a9a
+# ╠═04813cc3-3fd3-451c-b225-420c861108e3
 # ╠═34a840a1-7050-4719-a81e-c4545551ec7d
 # ╠═83920316-034e-4ca1-94fa-5aea4d4d117b
 # ╠═8287cc85-37d3-4b53-ab65-0aef5d996a72
@@ -777,3 +915,4 @@ md"""
 # ╠═2d8d5528-d64d-4026-b5a6-93b66e17e609
 # ╠═c3929637-0224-4f95-a8ce-b1a159084014
 # ╠═2f28edec-8461-4eda-a95f-05f4db5b3a81
+# ╠═62533405-5797-4e79-a666-01752b7d5876
